@@ -1,0 +1,27 @@
+pipeline {
+    agent any
+
+    stages {
+
+        stage('Checkout Code') {
+            steps {
+                git branch: 'main', url: 'https://github.com/Archit1704/task-tracker.git'
+            }
+        }
+
+        stage('Deploy to EC2') {
+            steps {
+                sshagent(['ec2-key']) {
+                    sh '''
+                    rsync -avz --delete \
+                    --exclude='.git' \
+                    --exclude='node_modules' \
+                    -e "ssh -o StrictHostKeyChecking=no" \
+                    ./ ubuntu@EC2_IP:/home/ubuntu/task-tracker/
+                    '''
+                }
+            }
+        }
+
+    }
+}
