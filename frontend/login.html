@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Login - Task Tracker</title>
+
+<style>
+
+body{
+    font-family: Arial;
+    background:#121212;
+    color:white;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    height:100vh;
+}
+
+.container{
+    background:#1e1e1e;
+    padding:30px;
+    border-radius:10px;
+    width:300px;
+    box-shadow:0 0 10px rgba(0,0,0,0.5);
+}
+
+h2{
+    text-align:center;
+}
+
+input{
+    width:100%;
+    padding:10px;
+    margin:10px 0;
+    background:#2a2a2a;
+    border:1px solid #444;
+    color:white;
+}
+
+button{
+    width:100%;
+    padding:10px;
+    background:#3b82f6;
+    border:none;
+    color:white;
+    cursor:pointer;
+}
+
+button:hover{
+    background:#2563eb;
+}
+
+.switch{
+    text-align:center;
+    margin-top:10px;
+    cursor:pointer;
+    color:#aaa;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div class="container">
+
+<h2 id="title">Login</h2>
+
+<input id="username" placeholder="Username (signup only)" style="display:none;">
+<input id="email" placeholder="Email">
+<input id="password" type="password" placeholder="Password">
+
+<button onclick="submitForm()">Login</button>
+
+<div class="switch" onclick="toggleMode()">Don't have an account? Signup</div>
+
+</div>
+
+<script>
+
+const API = "http://localhost:3000";
+
+let isLogin = true;
+
+function toggleMode(){
+    isLogin = !isLogin;
+
+    document.getElementById("title").innerText = isLogin ? "Login" : "Signup";
+    document.querySelector("button").innerText = isLogin ? "Login" : "Signup";
+
+    document.getElementById("username").style.display = isLogin ? "none" : "block";
+
+    document.querySelector(".switch").innerText =
+        isLogin ? "Don't have an account? Signup" : "Already have an account? Login";
+}
+
+async function submitForm(){
+
+    const email = document.getElementById("email").value;
+    const password = document.getElementById("password").value;
+
+    if(isLogin){
+
+        const res = await fetch(`${API}/login`,{
+            method:"POST",
+            headers:{"Content-Type":"application/json"},
+            body:JSON.stringify({email,password})
+        });
+
+        const data = await res.json();
+
+        localStorage.setItem("token", data.token);
+
+        window.location.href = "index.html";
+
+    }else{
+
+        const username = document.getElementById("username").value;
+
+        await fetch(`${API}/signup`,{
+            method:"POST",
+            headers:{"Content-Type":"application/json"},
+            body:JSON.stringify({username,email,password})
+        });
+
+        alert("Signup done. Now login.");
+        toggleMode();
+    }
+}
+
+</script>
+
+</body>
+</html>

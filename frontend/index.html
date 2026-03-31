@@ -1,5 +1,4 @@
 <!DOCTYPE html>
-
 <html lang="en">
 <head>
 <meta charset="UTF-8">
@@ -60,7 +59,7 @@ input::placeholder{
 }
 
 button{
-    padding:10px 15px;
+    padding:8px 12px;
     border:none;
     background:#3b82f6;
     color:white;
@@ -72,13 +71,22 @@ button:hover{
     background:#2563eb;
 }
 
+.delete-btn{
+    background:#ef4444;
+    margin-left:8px;
+}
+
+.delete-btn:hover{
+    background:#dc2626;
+}
+
 ul{
     list-style:none;
     padding:0;
 }
 
 li{
-    padding:10px;
+    padding:12px;
     border-bottom:1px solid #333;
     display:flex;
     justify-content:space-between;
@@ -88,6 +96,15 @@ li{
 .task-info{
     display:flex;
     flex-direction:column;
+}
+
+.task-info strong{
+    font-size:16px;
+}
+
+.task-info small{
+    color:#aaa;
+    margin-top:3px;
 }
 
 select{
@@ -118,7 +135,11 @@ select{
 
 <div class="container">
 
-<h1>📊 Task Tracker Dashboard</h1>
+<h1>📊 Task Tracker Dashboard
+    <button onclick="logout()" style="float:right;background:#ef4444">
+Logout
+</button>
+</h1>
 <p class="subtitle">Track tasks, update progress, and visualize status in one place 🚀</p>
 
 <div class="card">
@@ -136,7 +157,7 @@ select{
 <div class="card">
 
 <h2>📋 Task List</h2>
-<p style="color:#aaa">View all tasks and update their status.</p>
+<p style="color:#aaa">View your tasks and update their status.</p>
 
 <ul id="taskList"></ul>
 
@@ -145,7 +166,7 @@ select{
 <div class="card">
 
 <h2>📈 Task Status Overview</h2>
-<p style="color:#aaa">A quick visual summary of task progress.</p>
+<p style="color:#aaa">A quick visual summary of your progress.</p>
 
 <div class="chart-container">
 <canvas id="chart"></canvas>
@@ -160,7 +181,6 @@ select{
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-
 <script src="script.js"></script>
 
 </body>

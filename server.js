@@ -2,105 +2,185 @@ const express = require('express');
 const cors = require('cors');
 const db = require('./db');
 const path = require("path");
+const bcrypt = require("bcrypt");
+const jwt = require("jsonwebtoken");
 
 const app = express();
 
 app.use(cors());
 app.use(express.json());
 
+app.get("/", (req, res) => {
+  res.sendFile(path.join(__dirname, "frontend", "login.html"));
+});
+
 app.use(express.static(path.join(__dirname, "frontend")));
 
-// app.get("/", (req, res) => {
-//     res.send("server is running");
-// });
+const SECRET = "secretkey";
+
+// 🔐 AUTH MIDDLEWARE
+function auth(req, res, next) {
+  const token = req.headers.authorization;
+
+  if (!token) return res.status(403).send("No token");
+
+  try {
+    const decoded = jwt.verify(token, SECRET);
+    req.userId = decoded.id;
+    next();
+  } catch {
+    res.status(401).send("Invalid token");
+  }
+}
 
 
-// post part that insert the data 
+// 👤 SIGNUP
+app.post("/signup", async (req, res) => {
+  const { username, email, password } = req.body;
 
-app.post("/tasks", (req, res) => {
+  const hashed = await bcrypt.hash(password, 10);
+
+  db.query(
+    "INSERT INTO users (username, email, password) VALUES (?, ?, ?)",
+    [username, email, hashed],
+    (err) => {
+      if (err) return res.status(500).send(err);
+      res.send("User created");
+    }
+  );
+});
+
+
+// 🔑 LOGIN
+app.post("/login", (req, res) => {
+  const { email, password } = req.body;
+
+  db.query(
+    "SELECT * FROM users WHERE email = ?",
+    [email],
+    async (err, results) => {
+
+      if (err) {
+        console.error("LOGIN ERROR:", err);
+        return res.status(500).send("Server error");
+      }
+
+      if (results.length === 0) {
+        return res.status(404).send("User not found");
+      }
+
+      const user = results[0];
+
+      const match = await bcrypt.compare(password, user.password);
+      if (!match) return res.status(401).send("Wrong password");
+
+      const token = jwt.sign({ id: user.id }, SECRET);
+
+      res.json({ token });
+    }
+  );
+});
+
+
+// ➕ ADD TASK
+app.post("/tasks", auth, (req, res) => {
 
   const { title, description } = req.body;
 
-  const sql = "INSERT INTO tasks (title, description) VALUES (?, ?)";
+  if (!title || !description || !title.trim() || !description.trim()) {
+    return res.status(400).json({ error: "Title and description required" });
+  }
 
-  db.query(sql, [title, description], (err, result) => {
+  const sql = "INSERT INTO tasks (title, description, status, user_id) VALUES (?, ?, 'pending', ?)";
+
+  db.query(sql, [title, description, req.userId], (err, result) => {
 
     if (err) {
-      console.error(err);
-      return res.status(500).json({ error: "Database insert failed" });
+      console.error("DB ERROR:", err);
+      return res.status(500).json({ error: err.message });
     }
 
-    res.json({
-      message: "Task added successfully",
-      taskId: result.insertId
-    });
-
+    res.json({ message: "Task added" });
   });
-
 });
 
-// get response part that'll seen in browser
 
-app.get("/tasks", (req, res) => {
+// 📥 GET TASKS (USER SPECIFIC)
+app.get("/tasks", auth, (req, res) => {
 
-  const sql = "SELECT * FROM tasks";
+  const sql = "SELECT * FROM tasks WHERE user_id = ?";
 
-  db.query(sql, (err, results) => {
+  db.query(sql, [req.userId], (err, results) => {
 
     if (err) {
-      console.error(err);
-      return res.status(500).json({ error: "Database fetch failed" });
+      console.error("DB ERROR:", err);
+      return res.status(500).json({ error: err.message });
     }
 
     res.json(results);
-
   });
 
 });
 
-// PUT part where data is updated..
 
-app.put("/tasks/:id", (req, res) => {
+// ✏️ UPDATE STATUS
+app.put("/tasks/:id", auth, (req, res) => {
 
   const { id } = req.params;
   const { status } = req.body;
 
-  const sql = "UPDATE tasks SET status = ? WHERE id = ?";
+  const sql = "UPDATE tasks SET status = ? WHERE id = ? AND user_id = ?";
 
-  db.query(sql, [status, id], (err, result) => {
+  db.query(sql, [status, id, req.userId], (err) => {
 
     if (err) {
-      console.error(err);
-      return res.status(500).json({ error: "Database update failed" });
+      console.error("UPDATE ERROR:", err);
+      return res.status(500).json({ error: err.message });
     }
 
-    res.json({
-      message: "Task status updated"
-    });
-
+    res.json({ message: "Updated" });
   });
 
 });
 
-// status count for pie chart...
 
-app.get("/stats", (req, res) => {
+// ❌ DELETE TASK
+app.delete("/tasks/:id", auth, (req, res) => {
+
+  const { id } = req.params;
+
+  const sql = "DELETE FROM tasks WHERE id = ? AND user_id = ?";
+
+  db.query(sql, [id, req.userId], (err) => {
+
+    if (err) {
+      console.error("DELETE ERROR:", err);
+      return res.status(500).json({ error: err.message });
+    }
+
+    res.json({ message: "Deleted" });
+  });
+
+});
+
+
+// 📊 STATS (USER SPECIFIC)
+app.get("/stats", auth, (req, res) => {
 
   const sql = `
     SELECT status, COUNT(*) AS count
     FROM tasks
+    WHERE user_id = ?
     GROUP BY status
   `;
 
-  db.query(sql, (err, results) => {
+  db.query(sql, [req.userId], (err, results) => {
 
     if (err) {
-      console.error(err);
-      return res.status(500).json({ error: "Stats query failed" });
+      console.error("DB ERROR:", err);
+      return res.status(500).json({ error: err.message });
     }
-
     res.json(results);
-
   });
 
 });
@@ -108,5 +188,5 @@ app.get("/stats", (req, res) => {
 const PORT = 3000;
 
 app.listen(PORT, () => {
-    console.log(`server running on port ${PORT}`);
+  console.log(`server running on port ${PORT}`);
 });
