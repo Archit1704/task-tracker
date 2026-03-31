@@ -1,7 +1,8 @@
-# 📌 Task Tracker API
+# 📌 Task Tracker (v2.0)
 
-A simple **Task Tracker REST API** built with **Node.js, Express, and MySQL**.
-This project allows users to **create, view, update, and analyze tasks** efficiently.
+A full-stack **Task Management Application** built with **Node.js, Express, MySQL, and Vanilla JS**.
+
+This project evolved from a basic task API to a **user-based task system with authentication, validation, and analytics**.
 
 ---
 
@@ -10,16 +11,35 @@ This project allows users to **create, view, update, and analyze tasks** efficie
 * 🟢 Node.js
 * ⚡ Express.js
 * 🗄️ MySQL
-* 🎨 HTML, CSS, JavaScript (Frontend)
+* 🔐 JWT Authentication
+* 🎨 HTML, CSS, JavaScript
 
 ---
 
 ## ✨ Features
 
-* ➕ Create new tasks
-* 📋 View all tasks
+### 🔐 Authentication
+
+* User signup & login
+* JWT-based authentication
+* Protected routes (user-specific data)
+
+### 📋 Task Management
+
+* ➕ Create tasks
+* 📥 View user-specific tasks
 * 🔄 Update task status
-* 📊 Task statistics (completed, pending, etc.)
+* ❌ Delete tasks
+
+### 📊 Analytics
+
+* Task statistics (pending, completed, etc.)
+* Visualized using charts
+
+### 🛡️ Validation
+
+* Frontend + backend validation
+* Prevents empty or invalid data
 
 ---
 
@@ -28,11 +48,10 @@ This project allows users to **create, view, update, and analyze tasks** efficie
 ```
 task-tracker/
 │
-├── frontend/        # 🌐 Frontend files (HTML, CSS, JS)
-├── server.js        # 🚀 Express server and API routes
+├── frontend/        # 🌐 Frontend (HTML, CSS, JS)
+├── server.js        # 🚀 Backend (Express API)
 ├── db.js            # 🗄️ Database connection
-├── package.json     # 📦 Project dependencies
-├── package-lock.json
+├── package.json
 └── .gitignore
 ```
 
@@ -40,16 +59,9 @@ task-tracker/
 
 ## ⚙️ Installation
 
-Clone the repository
-
-```
+```bash
 git clone https://github.com/YOUR_USERNAME/task-tracker.git
 cd task-tracker
-```
-
-Install dependencies
-
-```
 npm install
 ```
 
@@ -57,7 +69,7 @@ npm install
 
 ## 🔑 Environment Variables
 
-Create a `.env` file in the root directory and add:
+Create a `.env` file:
 
 ```
 DB_HOST=localhost
@@ -65,19 +77,18 @@ DB_USER=root
 DB_PASSWORD=yourpassword
 DB_NAME=taskdb
 PORT=3000
+JWT_SECRET=secretkey
 ```
 
 ---
 
-## ▶️ Running the Server
+## ▶️ Run the Project
 
-Start the backend server
-
-```
+```bash
 node server.js
 ```
 
-Server will run at:
+Open:
 
 ```
 http://localhost:3000
@@ -87,41 +98,41 @@ http://localhost:3000
 
 ## 🔗 API Endpoints
 
-### ➕ Create Task
+### 🔐 Auth
 
-```
-POST /tasks
-```
+* `POST /signup`
+* `POST /login`
 
-### 📋 Get All Tasks
+### 📋 Tasks (Protected)
 
-```
-GET /tasks
-```
+* `POST /tasks` → Create task
+* `GET /tasks` → Get user tasks
+* `PUT /tasks/:id` → Update status
+* `DELETE /tasks/:id` → Delete task
 
-### 🔄 Update Task Status
+### 📊 Stats
 
-```
-PUT /tasks/:id
-```
+* `GET /stats` → Task statistics
 
-### 📊 Task Statistics
+---
 
-```
-GET /stats
-```
+## 🏷️ Versioning
+
+* `v1.0` → Basic task API
+* `v2.0` → Authentication + user-specific tasks + validation + stats
 
 ---
 
 ## 🔮 Future Improvements
 
-* 🔐 Authentication system
+* 🌐 Deploy on AWS EC2 with domain & SSL
+* ⚙️ CI/CD pipeline (Jenkins)
 * 🐳 Docker containerization
-* ⚙️ CI/CD pipeline
-* ☁️ Deployment using AWS EC2 and Nginx
+* ⏱️ Task deadlines & reminders
 
 ---
 
 ## 👨‍💻 Author
 
 **Archit Sharma**
+
