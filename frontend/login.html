@@ -2,85 +2,221 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Login - Task Tracker</title>
-
 <style>
+:root{
+    --bg:#0d1117;
+    --surface:#161b22;
+    --surface-strong:#21262d;
+    --border:#30363d;
+    --text:#f0f6fc;
+    --muted:#8b949e;
+    --primary:#3fb950;
+    --primary-hover:#2ea043;
+    --shadow:0 16px 36px rgba(0, 0, 0, 0.35);
+    --shadow-hover:0 20px 42px rgba(0, 0, 0, 0.44);
+    --radius-lg:16px;
+    --radius-md:12px;
+    --transition:220ms ease;
+}
+
+*{ box-sizing:border-box; }
+
+html,
+body{
+    margin:0;
+    min-height:100%;
+    overflow-x:hidden;
+}
 
 body{
-    font-family: Arial;
-    background:#121212;
-    color:white;
-    display:flex;
-    justify-content:center;
+    min-height:100vh;
+    font-family:Inter, Geist, "Segoe UI", Roboto, sans-serif;
+    color:var(--text);
+    background:
+        radial-gradient(circle at top left, rgba(88, 166, 255, 0.07), transparent 22%),
+        radial-gradient(circle at bottom right, rgba(63, 185, 80, 0.05), transparent 20%),
+        linear-gradient(180deg, #0d1117 0%, #0f141b 100%);
+    padding:16px;
+    display:grid;
+    place-items:center;
+    line-height:1.55;
+}
+
+.auth-page{
+    width:min(100%, 440px);
+    margin:0 auto;
+}
+
+.auth-card{
+    position:relative;
+    overflow:hidden;
+    background:var(--surface);
+    border:1px solid var(--border);
+    border-radius:var(--radius-lg);
+    box-shadow:var(--shadow);
+    padding:24px;
+    transition:transform var(--transition), box-shadow var(--transition), border-color var(--transition), filter var(--transition);
+}
+
+.auth-card::before{
+    content:"";
+    position:absolute;
+    inset:0 0 auto 0;
+    height:1px;
+    background:linear-gradient(90deg, rgba(88, 166, 255, 0.16), transparent 72%);
+}
+
+.auth-card:hover{
+    transform:translateY(-2px);
+    box-shadow:var(--shadow-hover);
+}
+
+.eyebrow{
+    display:inline-flex;
     align-items:center;
-    height:100vh;
+    gap:8px;
+    width:max-content;
+    padding:7px 12px;
+    border-radius:999px;
+    border:1px solid rgba(255, 255, 255, 0.05);
+    background:rgba(139, 148, 158, 0.08);
+    color:#c9d1d9;
+    font-size:0.82rem;
+    font-weight:500;
+    margin-bottom:16px;
 }
 
-.container{
-    background:#1e1e1e;
-    padding:30px;
-    border-radius:10px;
-    width:300px;
-    box-shadow:0 0 10px rgba(0,0,0,0.5);
+.eyebrow-dot{
+    width:8px;
+    height:8px;
+    border-radius:50%;
+    background:var(--primary);
+    flex:0 0 auto;
 }
 
-h2{
-    text-align:center;
+h1{
+    margin:0 0 8px;
+    font-size:1.9rem;
+    font-weight:700;
+    letter-spacing:-0.03em;
+}
+
+p{
+    margin:0 0 20px;
+    color:var(--muted);
+    line-height:1.6;
+}
+
+.field{
+    margin-bottom:14px;
+}
+
+label{
+    display:block;
+    margin-bottom:8px;
+    color:#d0d7de;
+    font-size:0.92rem;
+    font-weight:500;
+}
+
+input,
+button{
+    width:100%;
+    font:inherit;
 }
 
 input{
-    width:100%;
-    padding:10px;
-    margin:10px 0;
-    background:#2a2a2a;
-    border:1px solid #444;
-    color:white;
+    padding:12px 14px;
+    border:1px solid var(--border);
+    border-radius:var(--radius-md);
+    background:var(--surface-strong);
+    color:var(--text);
+    outline:none;
+    transition:border-color var(--transition), box-shadow var(--transition), background-color var(--transition);
+}
+
+input::placeholder{
+    color:#6e7681;
+}
+
+input:focus{
+    border-color:var(--primary);
+    box-shadow:0 0 0 3px rgba(63, 185, 80, 0.14);
 }
 
 button{
-    width:100%;
-    padding:10px;
-    background:#3b82f6;
+    margin-top:6px;
+    padding:12px 16px;
     border:none;
-    color:white;
+    border-radius:10px;
+    background:var(--primary);
+    color:#ffffff;
+    font-weight:600;
     cursor:pointer;
+    box-shadow:0 8px 18px rgba(63, 185, 80, 0.18);
+    transition:transform var(--transition), box-shadow var(--transition), background-color var(--transition), filter var(--transition);
 }
 
 button:hover{
-    background:#2563eb;
+    background:var(--primary-hover);
+    transform:translateY(-1px);
+    box-shadow:0 12px 24px rgba(63, 185, 80, 0.22);
+    filter:brightness(1.02);
 }
 
 .switch{
+    margin-top:14px;
     text-align:center;
-    margin-top:10px;
+    color:var(--muted);
     cursor:pointer;
-    color:#aaa;
+    transition:color var(--transition);
 }
 
+.switch:hover{
+    color:var(--text);
+}
+
+@media (max-width: 480px){
+    body{
+        padding:12px;
+    }
+
+    .auth-card{
+        padding:20px;
+    }
+}
 </style>
-
 </head>
-
 <body>
+<div class="auth-page">
+    <section class="auth-card">
+        <div class="eyebrow"><span class="eyebrow-dot"></span>Secure Access</div>
+        <h1 id="title">Login</h1>
+        <p id="subtitle">Enter your email and password to continue into your task dashboard.</p>
 
-<div class="container">
+        <div class="field" id="usernameField" style="display:none;">
+            <label for="username">Username</label>
+            <input id="username" placeholder="Your name">
+        </div>
 
-<h2 id="title">Login</h2>
+        <div class="field">
+            <label for="email">Email</label>
+            <input id="email" placeholder="name@example.com">
+        </div>
 
-<input id="username" placeholder="Username (signup only)" style="display:none;">
-<input id="email" placeholder="Email">
-<input id="password" type="password" placeholder="Password">
+        <div class="field">
+            <label for="password">Password</label>
+            <input id="password" type="password" placeholder="Enter password">
+        </div>
 
-<button onclick="submitForm()">Login</button>
-
-<div class="switch" onclick="toggleMode()">Don't have an account? Signup</div>
-
+        <button onclick="submitForm()">Login</button>
+        <div class="switch" onclick="toggleMode()">Don't have an account? Signup</div>
+    </section>
 </div>
-
 <script>
-
 const API = "";
-
 let isLogin = true;
 
 function toggleMode(){
@@ -88,20 +224,19 @@ function toggleMode(){
 
     document.getElementById("title").innerText = isLogin ? "Login" : "Signup";
     document.querySelector("button").innerText = isLogin ? "Login" : "Signup";
-
-    document.getElementById("username").style.display = isLogin ? "none" : "block";
-
+    document.getElementById("subtitle").innerText = isLogin
+        ? "Enter your email and password to continue into your task dashboard."
+        : "Create your account to start tracking tasks.";
+    document.getElementById("usernameField").style.display = isLogin ? "none" : "block";
     document.querySelector(".switch").innerText =
         isLogin ? "Don't have an account? Signup" : "Already have an account? Login";
 }
 
 async function submitForm(){
-
     const email = document.getElementById("email").value;
     const password = document.getElementById("password").value;
 
     if(isLogin){
-
         const res = await fetch(`${API}/login`,{
             method:"POST",
             headers:{"Content-Type":"application/json"},
@@ -109,13 +244,9 @@ async function submitForm(){
         });
 
         const data = await res.json();
-
         localStorage.setItem("token", data.token);
-
         window.location.href = "index.html";
-
     }else{
-
         const username = document.getElementById("username").value;
 
         await fetch(`${API}/signup`,{
@@ -128,8 +259,6 @@ async function submitForm(){
         toggleMode();
     }
 }
-
 </script>
-
 </body>
 </html>
