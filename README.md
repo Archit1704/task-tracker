@@ -1,55 +1,77 @@
-# Task Tracker
+# 📌 Task Tracker (v2.0)
 
-A full-stack task tracking app built with Node.js, Express, MySQL, and vanilla frontend code.
+A full-stack **Task Management Application** built with **Node.js, Express, MySQL, and Vanilla JS**.
 
-The current UI is a dark, responsive workspace with:
-- JWT-based login and signup
-- task creation, status updates, and deletion
-- a live task overview with counts and chart summary
-- a matching login and dashboard design
-- mobile-friendly layouts without horizontal overflow
+This project evolved from a basic task API to a **user-based task system with authentication, validation, and analytics**.
 
-## Stack
+---
 
-- Node.js
-- Express
-- MySQL
-- JWT authentication
-- HTML, CSS, JavaScript
-- Chart.js
+## 🚀 Tech Stack
 
-## Features
+* 🟢 Node.js
+* ⚡ Express.js
+* 🗄️ MySQL
+* 🔐 JWT Authentication
+* 🎨 HTML, CSS, JavaScript
 
-- User signup and login
-- Protected task routes with token auth
-- Create, view, update, and delete tasks
-- Status overview with chart and counters
-- Responsive dark theme for login and dashboard
-- Frontend validation for empty task input
+---
 
-## Project Structure
+## ✨ Features
 
-```text
+### 🔐 Authentication
+
+* User signup & login
+* JWT-based authentication
+* Protected routes (user-specific data)
+
+### 📋 Task Management
+
+* ➕ Create tasks
+* 📥 View user-specific tasks
+* 🔄 Update task status
+* ❌ Delete tasks
+
+### 📊 Analytics
+
+* Task statistics (pending, completed, etc.)
+* Visualized using charts
+
+### 🛡️ Validation
+
+* Frontend + backend validation
+* Prevents empty or invalid data
+
+---
+
+## 📁 Project Structure
+
+```
 task-tracker/
-├── frontend/
-│   ├── index.html
-│   ├── login.html
-│   └── script.js
-├── db.js
-├── server.js
+│
+├── frontend/        # 🌐 Frontend (HTML, CSS, JS)
+├── server.js        # 🚀 Backend (Express API)
+├── db.js            # 🗄️ Database connection
 ├── package.json
-└── README.md
+└── .gitignore
 ```
 
-## Setup
+---
+
+## ⚙️ Installation
 
 ```bash
+git clone https://github.com/YOUR_USERNAME/task-tracker.git
+cd task-tracker
 npm install
 ```
 
-Create a `.env` file with:
+---
 
-```env
+## 🔑 Environment Variables
+
+Create a `.env` file:
+
+```
 DB_HOST=localhost
 DB_USER=root
 DB_PASSWORD=yourpassword
@@ -58,37 +80,59 @@ PORT=3000
 JWT_SECRET=secretkey
 ```
 
-## Run
+---
+
+## ▶️ Run the Project
 
 ```bash
 node server.js
 ```
 
-Open `http://localhost:3000`.
+Open:
 
-## API
+```
+http://localhost:3000
+```
 
-Auth:
-- `POST /signup`
-- `POST /login`
+---
 
-Tasks:
-- `GET /tasks`
-- `POST /tasks`
-- `PUT /tasks/:id`
-- `DELETE /tasks/:id`
+## 🔗 API Endpoints
 
-Stats:
-- `GET /stats`
+### 🔐 Auth
 
-## Notes
+* `POST /signup`
+* `POST /login`
 
-- The recent UI changes are frontend-only and do not require database changes.
-- The login page and dashboard now share the same visual style and responsive behavior.
+### 📋 Tasks (Protected)
 
-## Next Ideas
+* `POST /tasks` → Create task
+* `GET /tasks` → Get user tasks
+* `PUT /tasks/:id` → Update status
+* `DELETE /tasks/:id` → Delete task
 
-- Add task filters like `All`, `Pending`, and `Completed`
-- Add inline task editing
-- Add due dates and reminders
-- Add deployment and CI/CD setup
+### 📊 Stats
+
+* `GET /stats` → Task statistics
+
+---
+
+## 🏷️ Versioning
+
+* `v1.0` → Basic task API
+* `v2.0` → Authentication + user-specific tasks + validation + stats
+
+---
+
+## 🔮 Future Improvements
+
+* 🌐 Deploy on AWS EC2 with domain & SSL
+* ⚙️ CI/CD pipeline (Jenkins)
+* 🐳 Docker containerization
+* ⏱️ Task deadlines & reminders
+
+---
+
+## 👨‍💻 Author
+
+**Archit Sharma**
+
